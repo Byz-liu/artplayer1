@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charSet="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Cache-Control" content="no-transform" /> 
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta name="renderer" content="webkit" />
+    <meta name="referrer" content="never">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Artplayer播放器</title>
+    <script src="https://cdn.staticfile.net/artplayer/5.1.1/artplayer.min.js"></script>
+    <script src="https://cdn.staticfile.net/hls.js/8.0.0-beta.3/hls.min.js"></script>
+    <style type="text/css">
+    * {
+        border: 0;
+        margin: 0;
+        padding: 0;
+        outline: none;
+        box-sizing: border-box;
+    }
+    body {
+        background: #000;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: center;
+    }
+    .artplayer-app {
+        position: absolute;
+        width: 100%;
+        top: 0;
+        bottom: 0px;
+        left: 0;
+        right: 0;
+    }
+    </style>
+</head>
+<body>
+    <div class="artplayer-app"></div>
+    <script>
+        function getUrlParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param) || '';
+        }
+
+        function ensureHttp(url) {
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                return 'https://' + url;
+            }
+            return url;
+        }
+        
+        // 内置标识和URL映射
+        const identifierMap = {
+            '1cl7lkyn': 'https://j2rspg.ch.files.1drv.com/y4mhi9Qk93tms0_J6Bir2h13fgQryzweNqjYK3nGjJkQW3jmgCJjnlCpQiwOjcA3EVQjYmLkNcSRHXqPId_KLJN2bveC18Lt8aCiyF0YYagkMk-Gn-YY2ZVQT9hJ_1g5PrtSpVB6ME_-0ETSkylcGsO1SkpivokkDtwDMkYf9mh68LglKICNtgQH_uR9u5xAcDM-aRhETxHg28G9SUSASIgfA',
+            'tlqldwt9': 'https://8holpq.ch.files.1drv.com/y4mrrBxWCPNX1aZwDZfRbh9cBTkVIbUZ1BPIhUEO4_pRwU4PZ4Arh_WjswWsm4i-jdmzH3IFN8iNcIURmATdNT6sPlJGUDKOEf7qjdqHIwhYWi2KEJ3B25zSwXms_BKzCP_FlxNms4QgA71GCCwlqIUSvCrlk02XZ44iiIU1z1MGi0jElmoVAnUT_wg7aG3bcqrzqIZvPZKakSyOxP4CFmJSQ'
+        };
+
+        let identifier = getUrlParam('url');
+        // 使用映射中的URL，如果不在映射中，则使用传入的URL
+        let url = identifierMap[identifier] ? identifierMap[identifier] : ensureHttp(identifier);
+
+        const isM3u8 = url.toLowerCase().includes('m3u8') || url.toLowerCase().includes('m3u');
+
+        function playM3u8(video, url, art) {
+            if (Hls.isSupported()) {
+                if (art.hls) art.hls.destroy();
+                const hls = new Hls();
+                hls.loadSource(url);
+                hls.attachMedia(video);
+                art.hls = hls;
+                art.on('destroy', () => hls.destroy());
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = url;
+            } else {
+                art.notice.show = 'Unsupported playback format: m3u8';
+            }
+        }
+        const art = new Artplayer({
+            container: ".artplayer-app",
+            url: url,
+            title: "video",
+            theme: '#fe0000',
+            ...isM3u8 ? {
+                type: 'm3u8',
+                customType: {
+                    m3u8: playM3u8,
+                },
+            } : {},
+            poster: '',
+            volume: 0.5,
+            isLive: false,
+            muted: false,
+            autoplay: false,
+            pip: true,
+            autoSize: false,
+            autoMini: true,
+            screenshot: true,
+            setting: true,
+            loop: true,
+            hotkey: true,
+            flip: true,
+            playbackRate: true,
+            aspectRatio: true,
+            fullscreen: true,
+            fullscreenWeb: false,
+            subtitleOffset: false,
+            miniProgressBar: true,
+            mutex: true,
+            playsInline: true,
+            autoPlayback: false,
+            airplay: false,
+            lock: true,
+            fastForward: true,
+            autoOrientation: true,
+        });
+    </script>
+</body>
+
+</html>
