@@ -56,15 +56,15 @@
         
         // 内置标识和URL映射
         const identifierMap = {
-            '1cl7lkyn': 'https://j2rspg.ch.files.1drv.com/y4mhi9Qk93tms0_J6Bir2h13fgQryzweNqjYK3nGjJkQW3jmgCJjnlCpQiwOjcA3EVQjYmLkNcSRHXqPId_KLJN2bveC18Lt8aCiyF0YYagkMk-Gn-YY2ZVQT9hJ_1g5PrtSpVB6ME_-0ETSkylcGsO1SkpivokkDtwDMkYf9mh68LglKICNtgQH_uR9u5xAcDM-aRhETxHg28G9SUSASIgfA',
-            'tlqldwt9': 'https://8holpq.ch.files.1drv.com/y4mrrBxWCPNX1aZwDZfRbh9cBTkVIbUZ1BPIhUEO4_pRwU4PZ4Arh_WjswWsm4i-jdmzH3IFN8iNcIURmATdNT6sPlJGUDKOEf7qjdqHIwhYWi2KEJ3B25zSwXms_BKzCP_FlxNms4QgA71GCCwlqIUSvCrlk02XZ44iiIU1z1MGi0jElmoVAnUT_wg7aG3bcqrzqIZvPZKakSyOxP4CFmJSQ'
+            '1cl7lkyn': 'https://',
+            'tlqldwt9': 'https://'
         };
 
         let identifier = getUrlParam('url');
         // 使用映射中的URL，如果不在映射中，则使用传入的URL
         let url = identifierMap[identifier] ? identifierMap[identifier] : ensureHttp(identifier);
 
-        const isM3u8 = url.toLowerCase().includes('m3u8') || url.toLowerCase().includes('m3u');
+        const isM3u8 = url.toLowerCase().includes('m3u8') || url.toLowerCase().includes('m3u') || url.toLowerCase().includes('jpg') || url.toLowerCase().includes('png') || url.toLowerCase().includes('jpeg');
 
         function playM3u8(video, url, art) {
             if (Hls.isSupported()) {
